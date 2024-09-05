@@ -60,7 +60,7 @@ namespace PdfToImages
                     {
                         // Create a file name for the image
                         string imageFileName = Path.Combine(Path.GetDirectoryName(pdfPath),
-                            Path.GetFileNameWithoutExtension(pdfPath) + $"_Page{i + 1}.png");
+                            Path.GetFileNameWithoutExtension(pdfPath) + $"_Page-{i + 1:000}.png");
 
                         // Save the image as PNG
                         image.Write(imageFileName, MagickFormat.Png);
