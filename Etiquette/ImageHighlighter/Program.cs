@@ -1,8 +1,5 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Advanced;
-using System;
 
 class Program
 {
@@ -10,13 +7,13 @@ class Program
     {
         if (args.Length < 3)
         {
-            Console.WriteLine("Usage: <inputImagePath> <outputImagePath> <targetColorHex> <extension>");
+            Console.WriteLine("Usage: <inputImagePath> <outputImagePath> <targetColourHex> <extension>");
             return;
         }
 
         string inputImagePath = args[0];
         string outputImagePath = args[1];
-        string targetColorHex = args[2];
+        string targetColourHex = args[2];
         string fileExtension = args[3];
 
         // Ensure the output directory exists
@@ -26,8 +23,8 @@ class Program
         }
 
         // Parse the target color from hex
-        Rgba32 targetColor = ParseColorFromHex(targetColorHex);
-        Rgba32 replacementColor = new Rgba32(255, 0, 0, 255); // Bright red
+        Rgba32 targetColour = ParseColorFromHex(targetColourHex);
+        Rgba32 replacementColour = new Rgba32(255, 0, 0, 255); // Bright red
 
         // Process all image files in the input folder with the specified extension
         string[] imageFiles = Directory.GetFiles(inputImagePath, "*" + fileExtension);
@@ -38,7 +35,7 @@ class Program
             string outputFilePath = Path.Combine(outputImagePath, fileName);
 
             Console.WriteLine($"Processing {fileName}...");
-            ReplaceColorInImage(imagePath, outputFilePath, targetColor, replacementColor);
+            HighlightFoldsInImage(imagePath, outputFilePath, targetColour, replacementColour);
         }
 
         Console.WriteLine("Colour replacement complete for all files!");
@@ -57,7 +54,14 @@ class Program
         return new Rgba32(r, g, b);
     }
 
-    static void ReplaceColorInImage(string inputImagePath, string outputImagePath, Rgba32 targetColor, Rgba32 replacementColor)
+    /// <summary>
+    /// Replaces the target colour in a file with a new colour, used to identify fold points
+    /// </summary>
+    /// <param name="inputImagePath"></param>
+    /// <param name="outputImagePath"></param>
+    /// <param name="targetColor"></param>
+    /// <param name="replacementColor"></param>
+    static void HighlightFoldsInImage(string inputImagePath, string outputImagePath, Rgba32 targetColor, Rgba32 replacementColor)
     {
         using (Image<Rgba32> image = Image.Load<Rgba32>(inputImagePath))
         {
@@ -80,6 +84,23 @@ class Program
 
             // Save the modified image
             image.Save(outputImagePath);
+        }
+    }
+
+    static void ConnectFoldPoints(string inputImagePath, string outputImagePath, Rgba32 targetColor)
+    {
+        using (Image<Rgba32> image = Image.Load<Rgba32>(inputImagePath))
+        {
+            bool IsFold = false;
+            Rgba32 foldColour = new Rgba32(255, 0, 0, 255);
+
+            for (int y = 0; y < image.Height; y++)
+            {
+                for (int x = 0; x < image.Width; x++)
+                {
+
+                }
+            }
         }
     }
 
