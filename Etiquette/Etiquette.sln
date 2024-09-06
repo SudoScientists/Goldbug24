@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHighlighter", "ImageHi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfToImages", "PdfToImages\PdfToImages.csproj", "{CEAAD2FE-568F-492D-81B8-A2A1267CE70D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageStitcher", "ImageStitcher\ImageStitcher.csproj", "{7798122A-0FE5-4213-9E4B-CF5BC0C3AF5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{CEAAD2FE-568F-492D-81B8-A2A1267CE70D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEAAD2FE-568F-492D-81B8-A2A1267CE70D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEAAD2FE-568F-492D-81B8-A2A1267CE70D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7798122A-0FE5-4213-9E4B-CF5BC0C3AF5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7798122A-0FE5-4213-9E4B-CF5BC0C3AF5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7798122A-0FE5-4213-9E4B-CF5BC0C3AF5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7798122A-0FE5-4213-9E4B-CF5BC0C3AF5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
