@@ -75,7 +75,7 @@ class Program
             CullBody(image, isEven);
             HighlightFolds(targetColor, replacementColor, image);
             SimplifyImage(image);
-            ConnectFolds(image, isEven, 2, 5);
+            //ConnectFolds(image, isEven, 2, 5);
             
             // Save the modified image
             image.Save(outputImagePath);
@@ -114,6 +114,8 @@ class Program
 
         static void HighlightFolds(Rgba32 targetColor, Rgba32 replacementColor, Image<Rgba32> image)
         {
+            Rgba32 blackColour = new Rgba32(0, 0, 0);
+            
             // Iterate over each pixel
             for (int y = 0; y < image.Height; y++)
             {
