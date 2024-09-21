@@ -24,20 +24,12 @@ class Program
 
         // "reverie" calculate the 2 person dance values UPTO the character SWAP with the 'masked guests'
         dance.Reverie();
-        Console.WriteLine("\nPresolve REVERIE \n" + dance);
+        Console.WriteLine("\nPresolve REVERIE done\n");
 
-
-        if(args[2] == "FWD")
-        {
-            // Follow the tutorial where we KNOW the cipher, to generate the ciphertext
-            // complete the reverie as described - generate the CIPHERTEXT
-
-        }
-        else
-        {
-            // Do a reverse resolve where we calculate the cipher FROM the ciphertext
-            // reverse engineer the cipher - generate the CIPHER
-        }
+        // FWD == Follow the tutorial where we KNOW the cipher, to generate the ciphertext
+        // REV == reverse engineer the cipher - generate the CIPHER
+        string solution = (args[2] == "FWD") ? dance.FwdReverie() : dance.RevReverie();
+        Console.WriteLine($"\n***THE ANSWER IS \"{solution}\" *** \n");
     }
 }
 
@@ -93,15 +85,6 @@ class Masquerade
             (seatNumbers[WrappedIndex(masterDial, seatNumbers.Length)], seatNumbers[masterIndex]) = (seatNumbers[masterIndex], seatNumbers[WrappedIndex(masterDial, seatNumbers.Length)]);
             Console.WriteLine($"Position {masterIndex} <--> {WrappedIndex(masterDial, 26)}");
         }
-
-        /*// Wrapping tests
-        Console.WriteLine($"Using Len {seatNumbers.Length} Index {0} Corrects to {WrappedIndex(0, seatNumbers.Length)}");
-        Console.WriteLine($"Using Len {seatNumbers.Length} Index {12} Corrects to {WrappedIndex(12, seatNumbers.Length)}");
-        Console.WriteLine($"Using Len {seatNumbers.Length} Index {25} Corrects to {WrappedIndex(25, seatNumbers.Length)}");
-        Console.WriteLine($"Using Len {seatNumbers.Length} Index {26} Corrects to {WrappedIndex(26, seatNumbers.Length)}");
-        Console.WriteLine($"Using Len {seatNumbers.Length} Index {30} Corrects to {WrappedIndex(30, seatNumbers.Length)}");
-        Console.WriteLine($"Using Len {seatNumbers.Length} Index {52} Corrects to {WrappedIndex(52, seatNumbers.Length)}");
-        Console.WriteLine($"Using Len {seatNumbers.Length} Index {-2} Corrects to {WrappedIndex(-2, seatNumbers.Length)}");*/
     }
 
     public void Reverie()
@@ -133,6 +116,33 @@ class Masquerade
             reverieOutput[i-1] = seatNumbers[danceEndpoint];
             Console.WriteLine($"Dancers {i} & {WrappedIndex(masterDial,seatNumbers.Length)} --> Seat {danceEndpoint} Val {seatNumbers[danceEndpoint]}");
         }
+
+    }
+
+    public string FwdReverie()
+    {
+        for(int i = 0; i < danceCipher.Length; i++)
+        {
+            // Sum value of seat number and alpha index of cipher letter
+            int letterVal = reverieOutput[i] + Array.IndexOf(alphabet, danceCipher[i]);
+            // Assign alpha value letter to masked guest
+            danceOutput[i] = alphabet[WrappedIndex(letterVal, alphabet.Length)];
+
+        }
+        return new string(danceOutput);
+    }
+
+    public string RevReverie()
+    {
+        for(int i = 0; i < danceCipher.Length; i++)
+        {
+            // Subtract the seat number val from the current letter's alpha value
+            int letterVal = Array.IndexOf(alphabet, danceCipher[i]) - reverieOutput[i];
+            // Assign alpha value letter to masked guest
+            danceOutput[i] = alphabet[WrappedIndex(letterVal, alphabet.Length)];
+
+        }
+        return new string(danceOutput);
 
     }
 
