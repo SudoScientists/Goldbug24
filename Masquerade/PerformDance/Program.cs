@@ -15,7 +15,7 @@ class Program
         Masquerade dance = new Masquerade(args[0], args[1]);
 
         // Set the initial positions
-        dance.CalculateInitialPositions();
+        dance.InitialPositions();
         Console.WriteLine("\nINITIAL \n" + dance);
 
         // "kindly shuffle" run the dance UPTO the 'masked guests' arrive
@@ -61,7 +61,7 @@ class Masquerade
         danceOutput = new char[this.danceCipher.Length];
     }
 
-    public void CalculateInitialPositions()
+    public void InitialPositions()
     {
         for(int i = 0; i < dedupedPhrase.Length; i++)
         {
@@ -72,7 +72,29 @@ class Masquerade
 
     public void KindlyShuffle()
     {
+        int masterDial = 0;
 
+        for(int masterIndex = 0; masterIndex < seatNumbers.Length; masterIndex++)
+        {
+            // Advance by number on floor
+            masterDial += seatNumbers[masterIndex];
+
+            // Advance by alphaindex of the letter
+            masterDial += Array.IndexOf(alphabet, seatLetters[masterIndex]);
+
+            // Swap number values  between masterIndex and masterDial(wrapped) - cool tuple syntax
+            (seatNumbers[WrappedIndex(masterDial, seatNumbers.Length)], seatNumbers[masterIndex]) = (seatNumbers[masterIndex], seatNumbers[WrappedIndex(masterDial, seatNumbers.Length)]);
+            Console.WriteLine($"Position {masterIndex} <--> {WrappedIndex(masterDial, 26)}");
+        }
+
+        /*// Wrapping tests
+        Console.WriteLine($"Using Len {seatNumbers.Length} Index {0} Corrects to {WrappedIndex(0, seatNumbers.Length)}");
+        Console.WriteLine($"Using Len {seatNumbers.Length} Index {12} Corrects to {WrappedIndex(12, seatNumbers.Length)}");
+        Console.WriteLine($"Using Len {seatNumbers.Length} Index {25} Corrects to {WrappedIndex(25, seatNumbers.Length)}");
+        Console.WriteLine($"Using Len {seatNumbers.Length} Index {26} Corrects to {WrappedIndex(26, seatNumbers.Length)}");
+        Console.WriteLine($"Using Len {seatNumbers.Length} Index {30} Corrects to {WrappedIndex(30, seatNumbers.Length)}");
+        Console.WriteLine($"Using Len {seatNumbers.Length} Index {52} Corrects to {WrappedIndex(52, seatNumbers.Length)}");
+        Console.WriteLine($"Using Len {seatNumbers.Length} Index {-2} Corrects to {WrappedIndex(-2, seatNumbers.Length)}");*/
     }
 
     public void Reverie()
@@ -121,5 +143,15 @@ class Masquerade
         Console.WriteLine($"Input {phrase} dedupes to {outputChars} length {outputChars.Length}");
 
         return outputChars.ToString();
+    }
+
+    private static int WrappedIndex(int index, int arrayLength)
+    {
+        // The formula (index % array.Length + array.Length) % array.Length ensures that both positive and negative indices are wrapped correctly.
+        // For positive indices, if the index exceeds the array length, it wraps around.
+        // For negative indices, it converts the negative index into a positive one by wrapping around in the other direction.
+        // The inner index % array.Length handles both positive overflow and negative values, but might leave negatives, 
+        // so adding array.Length ensures a positive index, followed by another % array.Length to account for potential overshooting.
+        return (index % arrayLength + arrayLength) % arrayLength;
     }
 }
