@@ -23,6 +23,9 @@ class Program
         Console.WriteLine("\nSHUFFLE \n" + dance);
 
         // "reverie" calculate the 2 person dance values UPTO the character SWAP with the 'masked guests'
+        dance.Reverie();
+        Console.WriteLine("\nPresolve REVERIE \n" + dance);
+
 
         if(args[2] == "FWD")
         {
@@ -43,6 +46,7 @@ class Masquerade
     string dancePhrase;
     string danceCipher;
     char[] dedupedPhrase;
+    int[] reverieOutput;
     char[] danceOutput;
     char[] alphabet;
     int[] seatNumbers;
@@ -50,15 +54,16 @@ class Masquerade
 
     public Masquerade(string phrase, string cipher) 
     {
-        this.dancePhrase = phrase; // test phrase - FOURKETTLESWARMKEEPWINTERATBAY
-        this.danceCipher = cipher; // test cipher - MYSTERIOUS
+        dancePhrase = phrase; // test phrase - FOURKETTLESWARMKEEPWINTERATBAY
+        danceCipher = cipher; // test cipher - MYSTERIOUS
 
         alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
-        dedupedPhrase = DedupePhrase(this.dancePhrase + new string(this.alphabet)).ToCharArray();
+        dedupedPhrase = DedupePhrase(dancePhrase + new string(alphabet)).ToCharArray();
 
         seatNumbers = new int[26];
         seatLetters = new char[26];
-        danceOutput = new char[this.danceCipher.Length];
+        reverieOutput = new int[danceCipher.Length];
+        danceOutput = new char[danceCipher.Length];
     }
 
     public void InitialPositions()
@@ -73,6 +78,8 @@ class Masquerade
     public void KindlyShuffle()
     {
         int masterDial = 0;
+
+        Console.WriteLine("\nShuffle Instructions\n");
 
         for(int masterIndex = 0; masterIndex < seatNumbers.Length; masterIndex++)
         {
@@ -99,6 +106,33 @@ class Masquerade
 
     public void Reverie()
     {
+        Console.WriteLine("\nReverie Instructions\n");
+
+        // Remove characters
+        for(int i = 0; i < seatLetters.Length; i++)
+        {
+            seatLetters[i] = '_';
+        }
+
+        int masterDial = 0;
+
+        // Iterate from 1 <-- (the master ignores 0 for some reason)
+        // One iteration per char of cipher
+        for(int i = 1; i <= danceCipher.Length; i++) //note the 1, so the end conditional needed +1
+        {
+            // calc new master dial
+            masterDial += seatNumbers[i]; //inc by number placard
+
+            // calc dance 'target' value (start at zero increment by dancer 1 number + dancer 2 number)
+            int danceEndpoint = WrappedIndex(seatNumbers[i]+seatNumbers[WrappedIndex(masterDial,seatNumbers.Length)], seatNumbers.Length);
+
+            // swap dancers
+            (seatNumbers[WrappedIndex(masterDial, seatNumbers.Length)], seatNumbers[i]) = (seatNumbers[i], seatNumbers[WrappedIndex(masterDial, seatNumbers.Length)]);
+
+            // DONT RESOLVE THE ASSISTANT DIAL HERE - cache answer so we can do fwd and reverse lookup later
+            reverieOutput[i-1] = seatNumbers[danceEndpoint];
+            Console.WriteLine($"Dancers {i} & {WrappedIndex(masterDial,seatNumbers.Length)} --> Seat {danceEndpoint} Val {seatNumbers[danceEndpoint]}");
+        }
 
     }
 
@@ -106,7 +140,7 @@ class Masquerade
     {
         StringBuilder outputString = new StringBuilder();
 
-        outputString.AppendLine($"DEDUPE-{new string(this.dedupedPhrase)} HIDDEN-{this.danceCipher} \n");
+        outputString.AppendLine($"DEDUPE-{new string(dedupedPhrase)} HIDDEN-{danceCipher} \n");
 
         for(int i = 0; i < seatNumbers.Length; i++)
         {
